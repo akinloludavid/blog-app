@@ -1,6 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
-
+const passport = require('passport')
 const blogRoute = require('./routes/blogRoutes')
 const blogPages = require('./routes/blogPages')
 
@@ -23,10 +23,16 @@ app.use((req, res, next) => {
   next();
 });
 
+require('./authenticate')
 
 app.use('/', blogPages)
 app.use('/b', blogRoute)
-
+app.use(passport.initialize())
+app.get('/google', passport.authenticate('google', {scope:'profile'}))
+app.get('/google/callback', passport.authenticate('google', {failureRedirect:'/login'}), (req, res)=>{
+  //res.redirect('/')
+  res.send('logged in')
+})
 // 404 page
 app.use((req, res) => {
   res.status(404).render('404', {
