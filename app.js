@@ -8,7 +8,9 @@ const connectDB = require('./database/connection')
 // express app
 const app = express();
 app.use(express.json())
-
+require('dotenv').config({
+  path:'./config.env'
+})
 connectDB()
 
 // register view engine
